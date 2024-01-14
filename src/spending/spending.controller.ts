@@ -1,34 +1,55 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
-import { SpendingService } from './spending.service';
-import { CreateSpendingDto } from './dto/create-spending.dto';
-import { UpdateSpendingDto } from './dto/update-spending.dto';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+} from '@nestjs/common'
+import { SpendingService } from './spending.service'
+import { CreateSpendingDto } from './dto/create-spending.dto'
+import { UpdateSpendingDto } from './dto/update-spending.dto'
 
-@Controller('spending')
+@Controller('despesas')
 export class SpendingController {
   constructor(private readonly spendingService: SpendingService) {}
 
   @Post()
-  create(@Body() createSpendingDto: CreateSpendingDto) {
-    return this.spendingService.create(createSpendingDto);
+  async create(@Body() createSpendingDto: CreateSpendingDto) {
+    const despesa = await this.spendingService.create(createSpendingDto)
+    return { message: 'Despesa criada com sucesso!', despesa: despesa }
   }
 
   @Get()
-  findAll() {
-    return this.spendingService.findAll();
+  async findAll() {
+    const despesas = await this.spendingService.findAll()
+    return despesas
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.spendingService.findOne(+id);
+  @Get('/:id')
+  async findOne(@Param('id') id: string) {
+    return await this.spendingService.findOne(id)
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateSpendingDto: UpdateSpendingDto) {
-    return this.spendingService.update(+id, updateSpendingDto);
+  @Patch('/:id')
+  async update(
+    @Param('id') id: string,
+    @Body() updateSpendingDto: UpdateSpendingDto,
+  ) {
+    const despesaAtualizada = await this.spendingService.update(
+      id,
+      updateSpendingDto,
+    )
+
+    return {
+      message: 'Despesa atualizada com sucesso!',
+      despesa: despesaAtualizada,
+    }
   }
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.spendingService.remove(+id);
+  @Delete('/:id')
+  async remove(@Param('id') id: string) {
+    return await this.spendingService.remove(id)
   }
 }
