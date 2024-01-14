@@ -1,8 +1,10 @@
+import { Spending } from '../../spending/entities/spending.entity'
 import {
   Column,
   CreateDateColumn,
   DeleteDateColumn,
   Entity,
+  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm'
@@ -29,4 +31,7 @@ export class Usuario {
 
   @DeleteDateColumn({ name: 'deleted_at' })
   deletedAt: string
+
+  @OneToMany(() => Spending, (spending) => spending.usuario, { cascade: true })
+  despesas: Spending[]
 }

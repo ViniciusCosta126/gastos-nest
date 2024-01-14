@@ -41,7 +41,9 @@ export class UsuariosService {
   }
 
   async findAll() {
-    const users = await this.usuarioRepository.find()
+    const users = await this.usuarioRepository.find({
+      relations: { despesas: true },
+    })
     return users
   }
 
